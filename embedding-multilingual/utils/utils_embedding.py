@@ -8,15 +8,15 @@ import pandas as pd
 import numpy as np
 
 
-def load_cleaned_qa_dataset(dataset_name):
+def load_qa_dataset(dataset_name):
     """
     Load the dataset and clean it by removing empty entries.
     """
     logger.info(f"Loading dataset from {dataset_name}")
     it_dataset = EmbeddingQAFinetuneDataset.from_json(dataset_name)
-    keys_to_delete = [key for key in it_dataset.corpus.keys() if it_dataset.corpus[key] == '']
-    for key in keys_to_delete:
-        del it_dataset.corpus[key]
+#    keys_to_delete = [key for key in it_dataset.corpus.keys() if it_dataset.corpus[key] == '']
+#    for key in keys_to_delete:
+#        del it_dataset.corpus[key]
     return it_dataset
 
 def evaluate(dataset, embed_model, top_k=5, verbose=False):
