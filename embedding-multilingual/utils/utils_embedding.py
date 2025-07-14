@@ -1,8 +1,23 @@
+from llama_index.finetuning import EmbeddingQAFinetuneDataset
+from loguru import logger
 from llama_index.core import VectorStoreIndex
 from llama_index.core.schema import TextNode
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
+
+
+def load_cleaned_qa_dataset(dataset_name):
+    """
+    Load the dataset and clean it by removing empty entries.
+    """
+    logger.info(f"Loading dataset from {dataset_name}")
+    it_dataset = EmbeddingQAFinetuneDataset.from_json(dataset_name)
+    keys_to_delete = [key for key in it_dataset.corpus.keys() if it_dataset.corpus[key] == '']
+    for key in keys_to_delete:
+        del it_dataset.corpus[key]
+    return it_dataset
 
 def evaluate(dataset, embed_model, top_k=5, verbose=False):
     """ Evaluate the dataset using the provided embedding model and return evaluation results. 
@@ -36,7 +51,6 @@ def evaluate(dataset, embed_model, top_k=5, verbose=False):
             mrr = 1 / rank
         else:
             mrr = 0
-
         eval_result = {
             "is_hit": is_hit,
             "mrr": mrr,
@@ -65,7 +79,7 @@ def plot_embeddings(pca, projected, query_embedding, expected_embedding, retriev
     plt.show()
 
 
-def dataframe_results(top_k, df_paraphrase_l12_results_it):
+def dataframe_results(top_k, df_paraphrase_l12_results_it, finetuned=False):
     """ Create a DataFrame with the evaluation results for the embedding model.
     
     Returns:
@@ -73,7 +87,18 @@ def dataframe_results(top_k, df_paraphrase_l12_results_it):
     """
     df_results_embedding = pd.DataFrame()
     df_results_embedding["model"] = ["paraphrase-multilingual-MiniLM-L12-v2"]
+    df_results_embedding["finetuned"] = [finetuned]
     df_results_embedding["top_k"] = [top_k]
     df_results_embedding["mrr"] = df_paraphrase_l12_results_it["mrr"].mean()
     df_results_embedding["is_hit"] = df_paraphrase_l12_results_it["is_hit"].mean()
     return df_results_embedding
+
+def create_set_embeddings(it_dataset, embed_model):
+    """
+    Create embeddings for the dataset corpus.
+    """
+    set_embeddings = []
+    for id_, text in tqdm(it_dataset.corpus.items()):
+        embedding = embed_model.get_text_embedding(text)
+        set_embeddings.append(embedding)
+    return np.array(set_embeddings)
