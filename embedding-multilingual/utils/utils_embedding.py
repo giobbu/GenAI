@@ -62,7 +62,7 @@ def evaluate(dataset, embed_model, top_k=5, verbose=False):
     return pd.DataFrame(eval_results)
 
 
-def plot_embeddings(pca, projected, query_embedding, expected_embedding, list_retrieved_embedding):
+def plot_embeddings(pca, query_id, projected, query_embedding, expected_embedding, list_retrieved_embedding, save=True, filename="embeddings_pca.png"):
 
     query_dot = pca.transform([query_embedding])
     expected_dot = pca.transform([expected_embedding])
@@ -75,8 +75,11 @@ def plot_embeddings(pca, projected, query_embedding, expected_embedding, list_re
         plt.scatter(retrieved_dot[i, 0], retrieved_dot[i, 1], color='blue', label='Retrieved' if i == 0 else "", s=50)
     plt.xlabel('component 1')
     plt.ylabel('component 2')
-    plt.title("PCA of Embeddings")
+    plt.title(f"PCA of Embeddings - query_id: {query_id}")
     plt.legend()
+    plt.tight_layout()
+    if save:
+        plt.savefig(filename)
     plt.show()
 
 
