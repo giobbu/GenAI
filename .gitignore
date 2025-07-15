@@ -2,6 +2,7 @@
 embedding-multilingual/blog
 embedding-multilingual/doc
 embedding-multilingual/QA
+embedding-multilingual/finetuned_model
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
