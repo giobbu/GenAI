@@ -36,15 +36,19 @@ def create_document(text_dict, filename='llm_response.docx'):
     doc.add_heading('LLM con risposta strutturata', level=1)
     doc.add_heading('Risposta', level=2)
     doc.add_paragraph(f"{text_dict['risposta']}")
-    doc.add_heading('Punteggio di confidenza', level=2)
+
+    doc.add_heading('Punteggio di confidenza da parte LLM', level=2)
     doc.add_paragraph(f"{text_dict['confidenza']}")
-    doc.add_heading('Spiegazione della confidenza', level=2)
+
+    doc.add_heading('Spiegazione della confidenza  da parte LLM', level=2)
     doc.add_paragraph(f"{text_dict['spiegazione_confidenza']}")
-    doc.add_heading('LLM Sources', level=2)
+
+    doc.add_heading('Riferimenti LLM', level=2)
     if text_dict.get('fonti'):
         doc.add_paragraph(f"{text_dict['fonti']}")
     else:
         doc.add_paragraph("Nessuna fonte disponibile.")
+    
     doc.add_heading('Livello di soddisfazione da parte dell utilizzatore', level=2)
     table = doc.add_table(rows=1, cols=5)
     table.style = 'Table Grid'

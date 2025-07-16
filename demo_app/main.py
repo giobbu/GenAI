@@ -3,6 +3,7 @@ from llama_index.llms.ollama import Ollama
 from setting import configLLM
 from utils import StructuredOutput, create_document, generate_response
 import json
+import time
 
 def main():
     st.title("LLM Structured Q&A App")
@@ -26,7 +27,10 @@ def main():
             structured_llm = llm.as_structured_llm(StructuredOutput)
 
             # Generate and display response
+            start_time = time.time()
             text_dict = generate_response(query=user_query, llm=structured_llm)
+            latency = time.time() - start_time
+            text_dict['latency'] = latency
             st.subheader("Structured Response")
             st.json(text_dict)
 
