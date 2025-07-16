@@ -8,9 +8,9 @@ class StructuredOutput(BaseModel):
     Structured output
     """
     risposta: str = Field(..., description="La risposta dell'LLM alla domanda.")
-    confidenza: float = Field(..., description="Confidenza dell'LLM nella risposta, da 0 a 1.")
+    punteggio_confidenza: float = Field(..., description="Confidenza dell'LLM nella risposta, nell'intervallo 0.0 e 1.0.")
     spiegazione_confidenza: str = Field(..., description="Spiegazione della confidenza dell'LLM nella risposta.")
-    fonti: str = Field(..., description="Fonti utilizzate dall'LLM per generare la risposta.")
+    riferimenti: str = Field(..., description="Riferimenti utilizzati dall'LLM per generare la risposta.")
 
 def generate_response(query, llm):
     """Generate a response from the LLM using the structured output format.
@@ -38,14 +38,14 @@ def create_document(text_dict, filename='llm_response.docx'):
     doc.add_paragraph(f"{text_dict['risposta']}")
 
     doc.add_heading('Punteggio di confidenza da parte LLM', level=2)
-    doc.add_paragraph(f"{text_dict['confidenza']}")
+    doc.add_paragraph(f"{text_dict['punteggio_confidenza']}")
 
     doc.add_heading('Spiegazione della confidenza  da parte LLM', level=2)
     doc.add_paragraph(f"{text_dict['spiegazione_confidenza']}")
 
     doc.add_heading('Riferimenti LLM', level=2)
-    if text_dict.get('fonti'):
-        doc.add_paragraph(f"{text_dict['fonti']}")
+    if text_dict.get('riferimenti'):
+        doc.add_paragraph(f"{text_dict['riferimenti']}")
     else:
         doc.add_paragraph("Nessuna fonte disponibile.")
     
