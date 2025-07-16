@@ -35,9 +35,7 @@ def evaluate_embedding(dataset, embed_model, top_k=5, verbose=False):
     relevant_docs = dataset.relevant_docs
 
     nodes = [TextNode(id_=id_, text=text) for id_, text in corpus.items()]
-    index = VectorStoreIndex(
-        nodes, embed_model=embed_model, show_progress=True
-    )
+    index = VectorStoreIndex(nodes, embed_model=embed_model, show_progress=True)
     retriever = index.as_retriever(similarity_top_k=top_k)
 
     eval_results = []
