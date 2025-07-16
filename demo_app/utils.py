@@ -7,13 +7,13 @@ class StructuredOutput(BaseModel):
     """
     Structured output
     """
-    answer: str = Field(..., description="La risposta dell'LLM alla domanda.")
-    confidence: float = Field(..., description="Confidenza dell'LLM nella risposta, da 0 a 1.")
-    confidence_explanation: str = Field(..., description="Spiegazione della confidenza dell'LLM nella risposta.")
-    sources: str = Field(..., description="Fonti utilizzate dall'LLM per generare la risposta.")
+    risposta: str = Field(..., description="La risposta dell'LLM alla domanda.")
+    confidenza: float = Field(..., description="Confidenza dell'LLM nella risposta, da 0 a 1.")
+    spiegazione_confidenza: str = Field(..., description="Spiegazione della confidenza dell'LLM nella risposta.")
+    fonti: str = Field(..., description="Fonti utilizzate dall'LLM per generare la risposta.")
 
 def generate_response(query, llm):
-    """    Generate a response from the LLM using the structured output format.
+    """Generate a response from the LLM using the structured output format.
     Args:
         query (str): The input query for the LLM.
         llm (structured_llm): The structured LLM instance.
@@ -33,19 +33,19 @@ def create_document(text_dict, filename='llm_response.docx'):
     """
 
     doc = Document()
-    doc.add_heading('LLM structured Response', level=1)
-    doc.add_heading('Answer', level=2)
-    doc.add_paragraph(f"{text_dict['answer']}")
-    doc.add_heading('LLM Confidence Score', level=2)
-    doc.add_paragraph(f"{text_dict['confidence']}")
-    doc.add_heading('LLM Confidence Explanation', level=2)
-    doc.add_paragraph(f"{text_dict['confidence_explanation']}")
+    doc.add_heading('LLM con risposta strutturata', level=1)
+    doc.add_heading('Risposta', level=2)
+    doc.add_paragraph(f"{text_dict['risposta']}")
+    doc.add_heading('Punteggio di confidenza', level=2)
+    doc.add_paragraph(f"{text_dict['confidenza']}")
+    doc.add_heading('Spiegazione della confidenza', level=2)
+    doc.add_paragraph(f"{text_dict['spiegazione_confidenza']}")
     doc.add_heading('LLM Sources', level=2)
-    if text_dict.get('sources'):
-        doc.add_paragraph(f"{text_dict['sources']}")
+    if text_dict.get('fonti'):
+        doc.add_paragraph(f"{text_dict['fonti']}")
     else:
-        doc.add_paragraph("No sources provided.")
-    doc.add_heading('Level of Satisfaction with the Answer', level=2)
+        doc.add_paragraph("Nessuna fonte disponibile.")
+    doc.add_heading('Livello di soddisfazione da parte dell utilizzatore', level=2)
     table = doc.add_table(rows=1, cols=5)
     table.style = 'Table Grid'
     table.autofit = False
