@@ -6,7 +6,7 @@ import json
 import time
 
 def main():
-    st.title("LLM Structured Q&A App")
+    st.title("Q&A Demo App")
 
     # Input query from user
     user_query = st.text_input("Enter your question:", value="What is Apple?")
