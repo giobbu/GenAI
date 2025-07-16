@@ -19,7 +19,7 @@ def load_qa_dataset(dataset_name):
 #        del it_dataset.corpus[key]
     return it_dataset
 
-def evaluate(dataset, embed_model, top_k=5, verbose=False):
+def evaluate_embedding(dataset, embed_model, top_k=5, verbose=False):
     """ Evaluate the dataset using the provided embedding model and return evaluation results. 
     Args:
         dataset (EmbeddingQAFinetuneDataset): The dataset to evaluate.
@@ -63,11 +63,9 @@ def evaluate(dataset, embed_model, top_k=5, verbose=False):
 
 
 def plot_embeddings(pca, query_id, projected, query_embedding, expected_embedding, list_retrieved_embedding, save=True, filename="embeddings_pca.png"):
-
     query_dot = pca.transform([query_embedding])
     expected_dot = pca.transform([expected_embedding])
     retrieved_dot = pca.transform(list_retrieved_embedding)
-
     plt.scatter(projected[:, 0], projected[:, 1], edgecolor='none', alpha=0.5)
     plt.scatter(query_dot[0, 0], query_dot[0, 1], color='green', label='Query', s=100)
     plt.scatter(expected_dot[0, 0], expected_dot[0, 1], color='red', label='Expected', s=100)
@@ -106,3 +104,40 @@ def create_set_embeddings(it_dataset, embed_model):
         embedding = embed_model.get_text_embedding(text)
         set_embeddings.append(embedding)
     return np.array(set_embeddings)
+
+
+def get_embeddings(query_id, embedding_model, df_results, qa_dataset):
+    " Get embeddings for a specific query from the results dataframe and dataset."
+    _query = df_results[df_results["query"] == query_id]["query"].values[0]
+    _expected = df_results[df_results["query"] == query_id]["expected"].values[0]
+    _list_retrieved = df_results[df_results["query"] == query_id]["retrieved"].values[0]
+    query_embedding = embedding_model.get_text_embedding(qa_dataset.queries[_query])
+    expected_embedding = embedding_model.get_text_embedding(qa_dataset.corpus[_expected])
+    list_retrieved_embedding = []
+    for _, retrieved in enumerate(_list_retrieved):
+        list_retrieved_embedding.append(embedding_model.get_text_embedding(qa_dataset.corpus[retrieved]))
+    return query_embedding, expected_embedding, list_retrieved_embedding
+
+def finetune_or_load_embedding_model(it_dataset, model_name, finetuned_filename, num_epochs):
+    """Finetune the embedding model or load the finetuned model if it exists."""
+    import os
+    from loguru import logger
+    from llama_index.finetuning import SentenceTransformersFinetuneEngine
+    from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+    
+    if not os.path.exists(finetuned_filename):
+        logger.info(f"Finetuning model {model_name} for {num_epochs} epochs...")
+        finetune_engine = SentenceTransformersFinetuneEngine(
+                                                        it_dataset,
+                                                        model_id=model_name,
+                                                        model_output_path=finetuned_filename,
+                                                        val_dataset=it_dataset,
+                                                        epochs=num_epochs
+                                                        )
+        finetune_engine.finetune()
+        finetuned_embed_model = finetune_engine.get_finetuned_model()
+        
+    else:
+        logger.info(f"Loading finetuned model from {finetuned_filename}...")
+        finetuned_embed_model = HuggingFaceEmbedding(model_name=finetuned_filename)
+    return finetuned_embed_model
