@@ -19,9 +19,9 @@ def main():
 
             params = configRAG()
 
-            index = ingestion_documents(params)
+            vector_index = ingestion_documents(params)
 
-            fmt_qa_prompt = run_retriever(index, user_query)
+            fmt_qa_prompt = run_retriever(vector_index, user_query, params)
 
             response = run_synthetizer(fmt_qa_prompt, params)
 

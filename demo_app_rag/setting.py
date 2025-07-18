@@ -1,7 +1,7 @@
 class configRAG:
     llm_model_name = "mistral-small:22b"
     embed_model_name = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
-    similarity_top_k = 3
+    similarity_top_k = 2
     chunk_size = 512
     chunk_overlap = 0 # overlap between chunks
     request_timeout = 240.0

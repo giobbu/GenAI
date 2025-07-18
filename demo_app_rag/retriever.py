@@ -1,6 +1,9 @@
 from llama_index.core import PromptTemplate 
-from loguru import logger
 import streamlit as st
+
+def round_score(score):
+    """Round the score to 2 decimal places."""
+    return round(score, 2)
 
 def run_retriever(index, user_query, params):
     """Retrieve relevant nodes from the index based on the user query."""     
@@ -10,7 +13,7 @@ def run_retriever(index, user_query, params):
     st.header("1 Task di RAG - Estrazione di Testo")
     for i, node in enumerate(nodes):
         st.subheader(f"Testo Estratto {i+1}")
-        logger.info(f"Node: {node.text}")
+        st.subheader(f"Score Similarity: {round_score(node.score)}")
         st.write(f"Node: {node.text}")
 
     qa_prompt = PromptTemplate(
