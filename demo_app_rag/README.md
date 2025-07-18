@@ -1,4 +1,4 @@
-## Run RAG demo-app
+# RAG demo-app
 
 ### Schema RAG system
 ![RAG](img/rag_system.png?raw=true)
