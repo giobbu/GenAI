@@ -2,9 +2,9 @@ from llama_index.core import PromptTemplate
 from loguru import logger
 import streamlit as st
 
-def run_retriever(index, user_query):
+def run_retriever(index, user_query, params):
     """Retrieve relevant nodes from the index based on the user query."""     
-    retriever = index.as_retriever()
+    retriever = index.as_retriever(similarity_top_k=params.similarity_top_k)
     nodes = retriever.retrieve(user_query)
 
     st.header("1 Task di RAG - Estrazione di Testo")
