@@ -10,3 +10,5 @@ class configRAG:
     additional_kwargs={"seed": 42,
                        "temperature": 0.1  # lower = more deterministic
                        }
+    directory = r"doc/"
+    required_exts = [".txt"]
