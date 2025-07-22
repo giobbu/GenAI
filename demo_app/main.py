@@ -6,7 +6,7 @@ import json
 import time
 
 def main():
-    st.title("Q&A Demo App")
+    st.title("Q&A LLM Demo App")
 
     # Input query from user
     user_query = st.text_input("Enter your question:", value="What is Apple?")
