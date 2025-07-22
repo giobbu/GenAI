@@ -9,23 +9,13 @@ import time
 
 def main():
     st.title("Q&A RAG app dimostrativa")
-
-    # Input query from user
     user_query = st.text_input("Domanda:", value=f"Che cos'è il DOCUMENTO DI LAVORO DEI SERVIZI DELLA COMMISSIONE?")
-
     if st.button("Risposta"):
-
         with st.spinner("Generating response..."):
-
             params = configRAG()
-
             vector_index = ingestion_documents(params)
-
             fmt_qa_prompt = run_retriever(vector_index, user_query, params)
-
             response = run_synthetizer(fmt_qa_prompt, params)
-
-            # formatted prompt
             st.subheader("Prompt Formattato")
             st.write(fmt_qa_prompt)
             logger.info(f"Response: {response}")
