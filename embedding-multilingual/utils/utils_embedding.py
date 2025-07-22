@@ -78,6 +78,19 @@ def plot_embeddings(pca, query_id, projected, query_embedding, expected_embeddin
         plt.savefig(filename)
     plt.show()
 
+def plot_topk_results(df_results, title):
+    plt.figure(figsize=(10, 6))
+    sns.lineplot(data=df_results, x="top_k", y="is_hit", label="Hit Rate")
+    sns.lineplot(data=df_results, x="top_k", y="mrr", label="MRR")
+    sns.scatterplot(data=df_results, x="top_k", y="is_hit", color="blue", s=100, label="Hit Rate Scores")
+    sns.scatterplot(data=df_results, x="top_k", y="mrr", color="orange", s=100, label="MRR Scores")
+    plt.title(title)
+    plt.xlabel("Top-k")
+    plt.ylabel("Metric of Interest")
+    plt.xticks(ticks=df_results["top_k"].unique())
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
 
 def dataframe_results(top_k, df_paraphrase_l12_results_it, finetuned=False):
     """ Create a DataFrame with the evaluation results for the embedding model.
@@ -139,3 +152,15 @@ def finetune_or_load_embedding_model(it_dataset, model_name, finetuned_filename,
         logger.info(f"Loading finetuned model from {finetuned_filename}...")
         finetuned_embed_model = HuggingFaceEmbedding(model_name=finetuned_filename)
     return finetuned_embed_model
+
+def evaluate_different_top_k(dataset, embed_model, top_k_values):
+    results = []
+    for top_k in top_k_values:
+        logger.info(f"Evaluating for top_k={top_k}")
+        df_model_results = evaluate_embedding(dataset=dataset, 
+                                    embed_model=embed_model, 
+                                    top_k=top_k, 
+                                    verbose=True)
+        df_results_topk = dataframe_results(top_k, df_model_results, finetuned=False)
+        results.append(df_results_topk)
+    return pd.concat(results, ignore_index=True)
