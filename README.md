@@ -1,1 +1,1 @@
-# LLM
+# GenAI
