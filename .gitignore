@@ -4,6 +4,10 @@ embedding-multilingual/doc
 embedding-multilingual/QA
 embedding-multilingual/finetuned-sentence-transformers
 embedding-multilingual/checkpoints
+embedding-multilingual.zip
+
+.DS_Store
+demo_app_rag/.DS_Store
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
