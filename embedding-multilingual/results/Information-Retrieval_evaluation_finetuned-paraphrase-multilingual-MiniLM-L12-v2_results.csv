@@ -1,2 +1,0 @@
-epoch,steps,cosine-Accuracy@1,cosine-Accuracy@3,cosine-Accuracy@5,cosine-Accuracy@10,cosine-Precision@1,cosine-Recall@1,cosine-Precision@3,cosine-Recall@3,cosine-Precision@5,cosine-Recall@5,cosine-Precision@10,cosine-Recall@10,cosine-MRR@10,cosine-NDCG@10,cosine-MAP@100
--1,-1,0.6115384615384616,0.7692307692307693,0.823076923076923,0.85,0.6115384615384616,0.6115384615384616,0.25641025641025644,0.7692307692307693,0.1646153846153846,0.823076923076923,0.085,0.85,0.6977182539682539,0.7351579848428359,0.7021632767837588
