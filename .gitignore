@@ -4,7 +4,12 @@ embedding-multilingual/doc
 embedding-multilingual/QA
 embedding-multilingual/finetuned-sentence-transformers
 embedding-multilingual/checkpoints
+embedding-multilingual/results/doc
+embedding-multilingual/results/codice
 embedding-multilingual.zip
+
+demo/demo_app_rag/finetuned-paraphrase-multilingual-MiniLM-L12-v2_gpt-35-turbo_dataset
+demo/demo_app_rag/codice
 
 .DS_Store
 demo_app_rag/.DS_Store
