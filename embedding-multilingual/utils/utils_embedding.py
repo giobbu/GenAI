@@ -2,6 +2,9 @@ from llama_index.finetuning import EmbeddingQAFinetuneDataset
 from loguru import logger
 from llama_index.core import VectorStoreIndex
 from llama_index.core.schema import TextNode
+from sentence_transformers.evaluation import InformationRetrievalEvaluator
+from sentence_transformers import SentenceTransformer
+from pathlib import Path
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -165,3 +168,13 @@ def evaluate_different_top_k(dataset, embed_model, top_k_values):
         df_results_topk = dataframe_results(top_k, df_model_results, finetuned=False)
         results.append(df_results_topk)
     return pd.concat(results, ignore_index=True)
+
+def fast_retriever_evaluator_sentence_transformer(dataset, model_id, name):
+    corpus = dataset.corpus
+    queries = dataset.queries
+    relevant_docs = dataset.relevant_docs
+    evaluator = InformationRetrievalEvaluator(queries, corpus, relevant_docs, name=name)
+    model = SentenceTransformer(model_id)
+    output_path = "results/codice/"
+    Path(output_path).mkdir(exist_ok=True, parents=True)
+    return evaluator(model, output_path=output_path)
